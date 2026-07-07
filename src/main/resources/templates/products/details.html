@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.name}">Produit</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="container detail">
+    <img th:src="${product.imageUrl}" th:alt="${product.name}">
+    <section>
+        <p class="category" th:text="${product.category}"></p>
+        <h1 th:text="${product.name}"></h1>
+        <p th:text="${product.description}"></p>
+        <h2 th:text="|${product.price} EUR|"></h2>
+        <p th:text="|Stock disponible: ${product.stock}|"></p>
+        <form th:action="@{/cart/add/{id}(id=${product.id})}" method="post" class="quantity-form">
+            <label>Quantite
+                <input type="number" name="quantity" min="1" value="1">
+            </label>
+            <button type="submit">Ajouter au panier</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

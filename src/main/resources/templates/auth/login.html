@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="container narrow">
+    <h1>Connexion</h1>
+    <p class="success" th:if="${param.registered}">Compte cree. Vous pouvez vous connecter.</p>
+    <p class="error" th:if="${param.error}">Email ou mot de passe incorrect.</p>
+    <form th:action="@{/auth/login}" method="post" class="form">
+        <label>Email
+            <input type="email" name="email" required>
+        </label>
+        <label>Mot de passe
+            <input type="password" name="password" required>
+        </label>
+        <button type="submit">Se connecter</button>
+    </form>
+    <p>Pas encore de compte ? <a th:href="@{/auth/register}">Creer un compte</a></p>
+</main>
+</body>
+</html>

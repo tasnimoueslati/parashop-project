@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin produits</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="container">
+    <div class="page-title">
+        <div>
+            <h1>Gestion des produits</h1>
+            <p class="page-subtitle">Ajoutez, modifiez ou retirez des produits du catalogue.</p>
+        </div>
+        <a class="button" th:href="@{/admin/products/new}">+ Nouveau produit</a>
+    </div>
+
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th>Nom</th>
+            <th>Categorie</th>
+            <th>Prix</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td>
+                <img th:src="${product.imageUrl}" th:alt="${product.name}"
+                     style="border-radius:8px;height:44px;object-fit:contain;width:44px;background:var(--color-primary-light);">
+            </td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.category}"></td>
+            <td th:text="|${product.price} EUR|"></td>
+            <td th:text="${product.stock}"></td>
+            <td class="actions">
+                <a class="button secondary" th:href="@{/admin/products/{id}/edit(id=${product.id})}">Modifier</a>
+                <form th:action="@{/admin/products/{id}/delete(id=${product.id})}" method="post">
+                    <button type="submit" class="danger">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

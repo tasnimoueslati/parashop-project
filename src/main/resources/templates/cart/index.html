@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panier</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="container">
+    <h1>Votre panier</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Produit</th>
+            <th>Prix</th>
+            <th>Quantite</th>
+            <th>Sous-total</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td th:text="${item.product.name}"></td>
+            <td th:text="|${item.product.price} EUR|"></td>
+            <td>
+                <form th:action="@{/cart/items/{id}(id=${item.id})}" method="post" class="inline">
+                    <input type="number" name="quantity" min="0" th:value="${item.quantity}">
+                    <button type="submit">OK</button>
+                </form>
+            </td>
+            <td th:text="|${item.subtotal} EUR|"></td>
+            <td>
+                <form th:action="@{/cart/items/{id}/remove(id=${item.id})}" method="post">
+                    <button type="submit" class="danger">Retirer</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <h2 th:text="|Total: ${total} EUR|"></h2>
+    <a class="button" th:href="@{/checkout}">Valider la commande</a>
+</main>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<th:block th:fragment="header">
+<header class="site-header">
+    <div class="topbar-alert">
+        <div class="container topbar-alert__inner">
+            <span>Livraison offerte des 49&euro; d'achat</span>
+            <span class="topbar-alert__sep">&bull;</span>
+            <span>Conseil pharmacien 7j/7</span>
+        </div>
+    </div>
+
+    <div class="navbar">
+        <div class="container navbar__inner">
+            <a class="brand" th:href="@{/products}">
+                <span class="brand__icon">&#10010;</span>
+                <span class="brand__text">Para<span class="brand__accent">Shop</span></span>
+            </a>
+
+            <form th:action="@{/products}" method="get" class="navbar__search">
+                <input type="search" name="q" placeholder="Rechercher un produit, une marque...">
+                <button type="submit" aria-label="Rechercher">&#128269;</button>
+            </form>
+
+            <button type="button" class="navbar__burger" id="navBurger" aria-label="Ouvrir le menu">&#9776;</button>
+
+            <nav class="navbar__links" id="navMenu">
+                <a th:href="@{/products}" sec:authorize="!hasRole('ADMIN')">Produits</a>
+
+                <a th:href="@{/orders}" sec:authorize="isAuthenticated() and !hasRole('ADMIN')">Mes commandes</a>
+
+                <div class="navbar__dropdown" sec:authorize="hasRole('ADMIN')">
+                    <button type="button" class="navbar__dropdown-toggle">Espace admin</button>
+                    <div class="navbar__dropdown-menu">
+                        <a th:href="@{/admin/products}">Admin produits</a>
+                        <a th:href="@{/admin/orders}">Admin commandes</a>
+                    </div>
+                </div>
+
+                <a class="navbar__cart" th:href="@{/cart}" sec:authorize="!hasRole('ADMIN')">
+                    <span>&#128722; Panier</span>
+                    <span class="cart-badge" th:if="${cartItemCount != null and cartItemCount > 0}" th:text="${cartItemCount}"></span>
+                </a>
+
+                <a th:href="@{/auth/login}" sec:authorize="!isAuthenticated()" class="navbar__cta">Connexion</a>
+                <a th:href="@{/auth/register}" sec:authorize="!isAuthenticated()" class="navbar__cta navbar__cta--ghost">Creer un compte</a>
+
+                <div class="navbar__dropdown" sec:authorize="isAuthenticated()">
+                    <button type="button" class="navbar__dropdown-toggle navbar__account" sec:authentication="name">Mon compte</button>
+                    <div class="navbar__dropdown-menu">
+                        <form th:action="@{/auth/logout}" method="post">
+                            <button type="submit" class="link-button">Deconnexion</button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+<script>
+(function () {
+    var burger = document.getElementById('navBurger');
+    var menu = document.getElementById('navMenu');
+    if (burger && menu) {
+        burger.addEventListener('click', function () {
+            menu.classList.toggle('is-open');
+        });
+    }
+    document.querySelectorAll('.navbar__dropdown-toggle').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var parent = btn.closest('.navbar__dropdown');
+            document.querySelectorAll('.navbar__dropdown.is-open').forEach(function (d) {
+                if (d !== parent) { d.classList.remove('is-open'); }
+            });
+            parent.classList.toggle('is-open');
+        });
+    });
+    document.addEventListener('click', function () {
+        document.querySelectorAll('.navbar__dropdown.is-open').forEach(function (d) {
+            d.classList.remove('is-open');
+        });
+    });
+})();
+</script>
+</th:block>
+</body>
+</html>

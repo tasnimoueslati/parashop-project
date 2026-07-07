@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.id} ? 'Modifier le produit' : 'Nouveau produit'">Produit</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="container narrow">
+    <div class="page-head">
+        <a th:href="@{/admin/products}" class="back-link">&larr; Retour aux produits</a>
+        <h1 th:text="${product.id} ? 'Modifier le produit' : 'Nouveau produit'">Produit</h1>
+        <p class="page-subtitle">Renseignez les informations et ajoutez une photo depuis votre ordinateur.</p>
+    </div>
+
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <form th:action="@{/admin/products}" th:object="${product}" method="post" enctype="multipart/form-data" class="form card-panel">
+        <input type="hidden" th:field="*{id}">
+
+        <label>Nom du produit
+            <input type="text" th:field="*{name}" placeholder="Ex : Creme hydratante visage" required>
+        </label>
+
+        <label>Description
+            <textarea th:field="*{description}" rows="4" placeholder="Composition, usage, conseils..."></textarea>
+        </label>
+
+        <div class="form-row">
+            <label>Categorie
+                <input type="text" th:field="*{category}" placeholder="Ex : Visage, Solaire, Bebe..." required>
+            </label>
+            <label>Prix (EUR)
+                <input type="number" step="0.01" min="0" th:field="*{price}" placeholder="0.00" required>
+            </label>
+            <label>Stock
+                <input type="number" min="0" th:field="*{stock}" placeholder="0" required>
+            </label>
+        </div>
+
+        <label class="image-field">
+            Photo du produit
+            <div class="image-upload">
+                <div class="image-upload__preview">
+                    <img th:if="${product.imageUrl}" th:src="${product.imageUrl}" alt="Apercu du produit">
+                    <span th:unless="${product.imageUrl}" class="image-upload__placeholder">Aucune image</span>
+                </div>
+                <div class="image-upload__control">
+                    <input type="file" id="imageFile" name="imageFile" accept="image/png,image/jpeg,image/webp,image/gif">
+                    <p class="image-upload__hint">Formats acceptes : JPG, PNG, WEBP, GIF (5 Mo max). Parcourez vos fichiers pour choisir une photo.</p>
+                </div>
+            </div>
+            <input type="hidden" th:field="*{imageUrl}">
+        </label>
+
+        <div class="actions">
+            <button type="submit" class="button">Enregistrer</button>
+            <a th:href="@{/admin/products}" class="button secondary">Annuler</a>
+        </div>
+    </form>
+</main>
+<script>
+    (function () {
+        var input = document.getElementById('imageFile');
+        var preview = document.querySelector('.image-upload__preview');
+        if (input && preview) {
+            input.addEventListener('change', function () {
+                var file = input.files && input.files[0];
+                if (!file) {
+                    return;
+                }
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    preview.innerHTML = '<img src="' + event.target.result + '" alt="Apercu du produit">';
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    })();
+</script>
+</body>
+</html>

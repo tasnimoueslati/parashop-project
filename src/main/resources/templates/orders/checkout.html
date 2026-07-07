@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Validation commande</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="container narrow">
+    <h1>Valider la commande</h1>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+    <p th:text="|Total a payer: ${total} EUR|"></p>
+    <form th:action="@{/checkout}" method="post" class="form">
+        <label>Adresse de livraison
+            <textarea name="deliveryAddress" rows="4" required></textarea>
+        </label>
+        <button type="submit">Confirmer la commande</button>
+    </form>
+</main>
+</body>
+</html>

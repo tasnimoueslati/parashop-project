@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Produits parapharmacie</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="container">
+    <section class="page-title">
+        <div>
+            <h1>Nos produits</h1>
+            <p class="page-subtitle">Soins, hygiene, solaires et complements disponibles en boutique.</p>
+        </div>
+        <form th:action="@{/products}" method="get" class="search">
+            <input type="search" name="q" placeholder="Rechercher..." th:value="${q}">
+            <button type="submit">Chercher</button>
+        </form>
+    </section>
+
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <section class="grid">
+        <article class="product-card" th:each="product : ${products}">
+            <img th:src="${product.imageUrl}" th:alt="${product.name}">
+            <div>
+                <p class="category" th:text="${product.category}"></p>
+                <h2 th:text="${product.name}"></h2>
+                <p th:text="${product.description}"></p>
+                <strong th:text="|${product.price} EUR|"></strong>
+                <p th:text="|Stock: ${product.stock}|"></p>
+                <div class="actions">
+                    <a class="button secondary" th:href="@{/products/{id}(id=${product.id})}">Details</a>
+                    <form th:action="@{/cart/add/{id}(id=${product.id})}" method="post">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit">Ajouter</button>
+                    </form>
+                </div>
+            </div>
+        </article>
+    </section>
+</main>
+</body>
+</html>
